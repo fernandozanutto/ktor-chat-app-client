@@ -2,16 +2,17 @@ package com.fzanutto.ktorchat.presentation.username
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,13 +33,14 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.fzanutto.ktorchat.domain.model.Message
 import com.fzanutto.ktorchat.presentation.chat.ChatViewModel
 import kotlinx.coroutines.flow.collectLatest
-
 
 @Composable
 fun ChatScreen(
@@ -71,9 +73,11 @@ fun ChatScreen(
 
     val state = viewModel.state.value
     
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -81,58 +85,12 @@ fun ChatScreen(
             reverseLayout = true
         ) {
             item {
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
             items(state.messages) { message ->
                 val isOwnMessage = message.username == username
-
-                Box(
-                    contentAlignment = if (isOwnMessage) {
-                        Alignment.CenterEnd
-                    } else Alignment.CenterStart,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .width(200.dp)
-                            .drawBehind {
-                                val cornerRadius = 10.dp.toPx()
-                                val triangleHeight = 20.dp.toPx()
-                                val triangleWidth = 25.dp.toPx()
-
-                                val trianglePath = Path().apply {
-                                    if (isOwnMessage) {
-                                        moveTo(size.width, size.height - cornerRadius)
-                                        lineTo(size.width, size.height + triangleHeight)
-                                        lineTo(
-                                            size.width - triangleWidth,
-                                            size.height - cornerRadius
-                                        )
-                                        close()
-                                    } else {
-                                        moveTo(0f, size.height - cornerRadius)
-                                        lineTo(0f, size.height + triangleHeight)
-                                        lineTo(triangleWidth, size.height - cornerRadius)
-                                        close()
-                                    }
-                                }
-                                drawPath(
-                                    path = trianglePath,
-                                    color = if (isOwnMessage) Color.Green else Color.Blue
-                                )
-                            }
-                            .background(
-                                color = if (isOwnMessage) Color.Green else Color.Blue,
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .padding(8.dp)
-                    ) {
-                        Text(message.username, fontWeight = FontWeight.Bold)
-                        Text(message.text, color = Color.White)
-                        Text(message.formattedTime, color = Color.White, modifier = Modifier.align(Alignment.End))
-                    }
-                }
+                ChatMessage(isOwnMessage, message)
             }
         }
         
@@ -154,6 +112,83 @@ fun ChatScreen(
                     contentDescription = "Send"
                 )
             }
+        }
+    }
+}
+
+@Preview(
+    showSystemUi = true
+)
+@Composable
+private fun PreviewChatMessage() {
+    val message = Message("Hello, how you doing?", "19h25", "Fernando")
+    Column {
+        ChatMessage(isOwnMessage = true, message = message)
+        Spacer(modifier = Modifier.height(16.dp))
+        ChatMessage(isOwnMessage = false, message = message)
+    }
+}
+
+@Composable
+private fun ChatMessage(
+    isOwnMessage: Boolean,
+    message: Message
+) {
+    Box(
+        contentAlignment = if (isOwnMessage) {
+            Alignment.CenterEnd
+        } else Alignment.CenterStart,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        val backgroundColor = if (isOwnMessage) {
+            Color(red = 0x07, green = 0x67, blue = 0x4B)
+        } else Color(red = 0x22, green = 0x2C, blue = 0x32)
+
+        val cornerRadiusDp = 10.dp
+        Column(
+            modifier = Modifier
+                .width(200.dp)
+                .drawBehind {
+                    val cornerRadius = cornerRadiusDp.toPx()
+                    val triangleHeight = 16.dp.toPx()
+                    val triangleWidth = 12.dp.toPx()
+
+                    val trianglePath = Path().apply {
+                        if (isOwnMessage) {
+                            moveTo(size.width - cornerRadius, 0f)
+                            lineTo(size.width + triangleWidth, 0f)
+                            lineTo(size.width, triangleHeight)
+                        } else {
+                            moveTo(cornerRadius, 0f)
+                            lineTo(-triangleWidth, 0f)
+                            lineTo(0f, triangleHeight)
+                        }
+                        close()
+                    }
+                    drawPath(
+                        path = trianglePath,
+                        color = backgroundColor
+                    )
+                }
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(cornerRadiusDp)
+                )
+                .padding(8.dp)
+        ) {
+            if (!isOwnMessage) {
+                Text(message.username, fontWeight = FontWeight.Bold, color = Color(0xFFCF5B0E))
+            }
+
+            Text(message.text, color = Color.White)
+            Text(
+                message.formattedTime,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.End)
+            )
         }
     }
 }
