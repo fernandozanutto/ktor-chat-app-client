@@ -1,4 +1,4 @@
-package com.fzanutto.ktorchat.data.remote.dto
+package com.fzanutto.ktorchat.data.remote.message
 
 import com.fzanutto.ktorchat.domain.model.Message
 import kotlinx.serialization.Serializable

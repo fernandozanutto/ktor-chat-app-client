@@ -1,6 +1,5 @@
-package com.fzanutto.ktorchat.data.remote
+package com.fzanutto.ktorchat.data.remote.message
 
-import com.fzanutto.ktorchat.data.remote.dto.MessageDTO
 import com.fzanutto.ktorchat.domain.model.Message
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get

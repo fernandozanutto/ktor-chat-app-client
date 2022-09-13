@@ -1,6 +1,6 @@
-package com.fzanutto.ktorchat.data.remote
+package com.fzanutto.ktorchat.data.remote.chat
 
-import com.fzanutto.ktorchat.data.remote.dto.MessageDTO
+import com.fzanutto.ktorchat.data.remote.message.MessageDTO
 import com.fzanutto.ktorchat.domain.model.Message
 import com.fzanutto.ktorchat.util.Resource
 import io.ktor.client.HttpClient
@@ -38,7 +38,7 @@ class ChatSocketServiceImpl(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Resource.Error(e.localizedMessage ?: "Unkown Error")
+            Resource.Error(e.localizedMessage ?: "Unknown Error")
         }
     }
 

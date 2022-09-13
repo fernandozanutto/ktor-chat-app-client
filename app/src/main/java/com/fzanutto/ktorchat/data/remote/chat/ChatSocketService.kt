@@ -1,5 +1,6 @@
-package com.fzanutto.ktorchat.data.remote
+package com.fzanutto.ktorchat.data.remote.chat
 
+import com.fzanutto.ktorchat.data.remote.RemoteConstants
 import com.fzanutto.ktorchat.domain.model.Message
 import com.fzanutto.ktorchat.util.Resource
 import kotlinx.coroutines.flow.Flow
