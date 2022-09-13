@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fzanutto.ktorchat.data.remote.ChatSocketService
-import com.fzanutto.ktorchat.data.remote.MessageService
+import com.fzanutto.ktorchat.data.remote.chat.ChatSocketService
+import com.fzanutto.ktorchat.data.remote.message.MessageService
 import com.fzanutto.ktorchat.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +22,6 @@ class ChatViewModel @Inject constructor(
     private val chatSocketService: ChatSocketService,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
-
     private val _messageText = mutableStateOf("")
     val messageText: State<String> = _messageText
 
@@ -49,7 +48,7 @@ class ChatViewModel @Inject constructor(
                              }.launchIn(viewModelScope)
                     }
                     is Resource.Error -> {
-                        _toastEvent.emit(result.message ?: "Unknown Erros")
+                        _toastEvent.emit(result.message ?: "Unknown Error")
                     }
                 }
             }
@@ -70,6 +69,7 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             if (messageText.value.isNotBlank()) {
                 chatSocketService.sendMessage(messageText.value)
+                _messageText.value = ""
             }
         }
     }

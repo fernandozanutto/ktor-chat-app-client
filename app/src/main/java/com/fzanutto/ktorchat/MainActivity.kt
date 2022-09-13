@@ -3,21 +3,13 @@ package com.fzanutto.ktorchat
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.fzanutto.ktorchat.presentation.username.ChatScreen
+import com.fzanutto.ktorchat.presentation.chat.ChatScreen
 import com.fzanutto.ktorchat.presentation.username.UsernameScreen
-import com.fzanutto.ktorchat.ui.theme.KtorChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
